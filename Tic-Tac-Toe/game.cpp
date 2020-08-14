@@ -6,31 +6,55 @@
 using namespace std;
 
 Game::Game() {
-	gameOver = false;
-	turn = 0;
-	winner = 0;
+	while (true) {
+		gameOver = false;
+		turn = 0;
+		winner = 0;
 
-	// Initialize random seed
-	srand(time(NULL));
+		// Initialize random seed
+		srand(time(NULL));
 
-	for (int i = 0; i < 9; i++) {
-		availableBoxes[i] = true;
-		boxes[i] = 0;
-	}
+		for (int i = 0; i < 9; i++) {
+			availableBoxes[i] = true;
+			boxes[i] = 0;
+		}
 
-	initialize_board();
-	while (!gameOver) {
-		switch (turn % 2) {
+		cout << "\n\n\n";
+		initialize_board();
+		while (!gameOver) {
+			switch (turn % 2) {
 			case 0:
 				player_turn();
 				break;
 			case 1:
 				computer_turn();
 				break;
+			}
+			turn++;
 		}
-		turn++;
+		display_winner();
+
+		// Prompt user to play again
+		cout << "Would you like to play again? (Y/N): ";
+		char playAgain;
+		cin >> playAgain;
+
+		while (toupper(playAgain) != 'Y' && toupper(playAgain) != 'N') {
+			// Clear cin buffer
+			cin.ignore(1000, '\n');
+
+			// Display error message
+			cout << "Error: Invalid input." << endl;
+
+			// Prompt user for new input
+			cout << "Would you like to play again? (Y/N): ";
+			cin >> playAgain;
+		}
+
+		if (toupper(playAgain) == 'N') {
+			break;
+		}
 	}
-	display_winner();
 }
 
 void Game::initialize_board() {
