@@ -56,7 +56,7 @@ void Game::initialize_board() {
 }
 
 void Game::player_turn() {
-	int playerNumber = 1;
+	const int PLAYER_NUMBER = 1;
 
 	// Read in player selection
 	cout << "Select a box: ";
@@ -70,14 +70,14 @@ void Game::player_turn() {
 	}
 
 	// Update board and print to screen
-	update_board(selection, playerNumber);
+	update_board(selection, PLAYER_NUMBER);
 	cout << "\n\n\n";
 	print_board();
-	check_for_winner(selection, playerNumber);
+	check_for_winner(selection, PLAYER_NUMBER);
 }
 
 void Game::computer_turn() {
-	int playerNumber = 2;
+	const int PLAYER_NUMBER = 2;
 
 	// Randomize Selection
 	int selection = (rand() % 9) + 1;
@@ -88,9 +88,9 @@ void Game::computer_turn() {
 	}
 
 	// Update board and print to screen
-	update_board(selection, playerNumber);
+	update_board(selection, PLAYER_NUMBER);
 	print_board();
-	check_for_winner(selection, playerNumber);
+	check_for_winner(selection, PLAYER_NUMBER);
 }
 
 void Game::update_board(int selection, int player) {
@@ -142,75 +142,75 @@ void Game::update_board(int selection, int player) {
 	availableBoxes[selection - 1] = false;
 }
 
-void Game::check_for_winner(int selection, int player) {
+void Game::check_for_winner(int selection, const int PLAYER) {
 	switch (selection - 1) {
 		case 0:
-			if ( (boxes[1] == player && boxes[2] == player) ||
-				(boxes[4] == player && boxes[8] == player) ||
-				(boxes[3] == player && boxes[6] == player) ) {
+			if ( (boxes[1] == PLAYER && boxes[2] == PLAYER) ||
+				(boxes[4] == PLAYER && boxes[8] == PLAYER) ||
+				(boxes[3] == PLAYER && boxes[6] == PLAYER) ) {
 				gameOver = true;
-				winner = player;
+				winner = PLAYER;
 			}
 			break;
 		case 1:
-			if ((boxes[0] == player && boxes[2] == player) ||
-				(boxes[4] == player && boxes[7] == player)) {
+			if ((boxes[0] == PLAYER && boxes[2] == PLAYER) ||
+				(boxes[4] == PLAYER && boxes[7] == PLAYER)) {
 				gameOver = true;
-				winner = player;
+				winner = PLAYER;
 			}
 			break;
 		case 2:
-			if ((boxes[0] == player && boxes[1] == player) ||
-				(boxes[6] == player && boxes[4] == player) ||
-				(boxes[5] == player && boxes[8] == player)) {
+			if ((boxes[0] == PLAYER && boxes[1] == PLAYER) ||
+				(boxes[6] == PLAYER && boxes[4] == PLAYER) ||
+				(boxes[5] == PLAYER && boxes[8] == PLAYER)) {
 				gameOver = true;
-				winner = player;
+				winner = PLAYER;
 			}
 			break;
 		case 3:
-			if ((boxes[0] == player && boxes[6] == player) ||
-				(boxes[4] == player && boxes[5] == player)) {
+			if ((boxes[0] == PLAYER && boxes[6] == PLAYER) ||
+				(boxes[4] == PLAYER && boxes[5] == PLAYER)) {
 				gameOver = true;
-				winner = player;
+				winner = PLAYER;
 			}
 			break;
 		case 4:
-			if ((boxes[0] == player && boxes[8] == player) ||
-				(boxes[3] == player && boxes[5] == player) ||
-				(boxes[6] == player && boxes[2] == player) ||
-				(boxes[1] == player && boxes[7] == player)) {
+			if ((boxes[0] == PLAYER && boxes[8] == PLAYER) ||
+				(boxes[3] == PLAYER && boxes[5] == PLAYER) ||
+				(boxes[6] == PLAYER && boxes[2] == PLAYER) ||
+				(boxes[1] == PLAYER && boxes[7] == PLAYER)) {
 				gameOver = true;
-				winner = player;
+				winner = PLAYER;
 			}
 			break;
 		case 5:
-			if ((boxes[2] == player && boxes[8] == player) ||
-				(boxes[3] == player && boxes[4] == player)) {
+			if ((boxes[2] == PLAYER && boxes[8] == PLAYER) ||
+				(boxes[3] == PLAYER && boxes[4] == PLAYER)) {
 				gameOver = true;
-				winner = player;
+				winner = PLAYER;
 			}
 			break;
 		case 6:
-			if ((boxes[0] == player && boxes[3] == player) ||
-				(boxes[4] == player && boxes[2] == player) ||
-				(boxes[7] == player && boxes[8] == player)) {
+			if ((boxes[0] == PLAYER && boxes[3] == PLAYER) ||
+				(boxes[4] == PLAYER && boxes[2] == PLAYER) ||
+				(boxes[7] == PLAYER && boxes[8] == PLAYER)) {
 				gameOver = true;
-				winner = player;
+				winner = PLAYER;
 			}
 			break;
 		case 7:
-			if ((boxes[1] == player && boxes[4] == player) ||
-				(boxes[6] == player && boxes[8] == player)) {
+			if ((boxes[1] == PLAYER && boxes[4] == PLAYER) ||
+				(boxes[6] == PLAYER && boxes[8] == PLAYER)) {
 				gameOver = true;
-				winner = player;
+				winner = PLAYER;
 			}
 			break;
 		case 8:
-			if ((boxes[0] == player && boxes[4] == player) ||
-				(boxes[2] == player && boxes[5] == player) ||
-				(boxes[6] == player && boxes[7] == player)) {
+			if ((boxes[0] == PLAYER && boxes[4] == PLAYER) ||
+				(boxes[2] == PLAYER && boxes[5] == PLAYER) ||
+				(boxes[6] == PLAYER && boxes[7] == PLAYER)) {
 				gameOver = true;
-				winner = player;
+				winner = PLAYER;
 			}
 			break;
 	}
