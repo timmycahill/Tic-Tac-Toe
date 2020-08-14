@@ -63,9 +63,17 @@ void Game::player_turn() {
 	int selection;
 	cin >> selection;
 
-	// Select new box if box is unavailable
-	while (!availableBoxes[selection - 1]) {
-		cout << "Invalid Selection.\n\nSelect a box: ";
+	// Validate input
+	while (!cin || selection > 9 || selection < 1 || !availableBoxes[selection - 1]) {
+		// Reset stream
+		cin.clear();
+		cin.ignore(1000, '\n');
+
+		// Output error message
+		cout << "Invalid Selection" << endl;
+
+		// Prompt user to re-enter selection
+		cout << "Select a box: ";
 		cin >> selection;
 	}
 
@@ -89,6 +97,7 @@ void Game::computer_turn() {
 
 	// Update board and print to screen
 	update_board(selection, PLAYER_NUMBER);
+	cout << "\n\n\n";
 	print_board();
 	check_for_winner(selection, PLAYER_NUMBER);
 }
@@ -96,7 +105,6 @@ void Game::computer_turn() {
 void Game::update_board(int selection, int player) {
 	// Set X or O depending on player
 	string lines[3];
-
 
 	switch (player) {
 		case 1:
