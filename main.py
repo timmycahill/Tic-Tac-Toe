@@ -1,3 +1,7 @@
 import tictactoe
 
-game = tictactoe.TicTacToe()
+def main():
+	game = tictactoe.TicTacToe()
+
+if __name__ == "__main__":
+	main()

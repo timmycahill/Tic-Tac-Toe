@@ -90,18 +90,25 @@ class TicTacToe:
 	def _game_loop(self):
 		gameOver = False
 		if random.randint(0, 1) == 0:
-			self.turn = 'x'
+			self.turn = 'X'
 		else:
-			self.turn = 'o'
+			self.turn = 'O'
 
 		while not gameOver:
-			if self.turn == 'x':
+			if self.turn == 'X':
 				self._player_turn()
-				self.turn = 'o'
 			else:
 				self._computer_turn()
-				self.turn = 'x'
+
 			gameOver = self._check_for_game_over()
+			if gameOver:
+				self._display_winner()
+			else:
+				if self.turn == 'X':
+					self.turn = 'O'
+				else:
+					self.turn = 'X'
+
 
 
 
@@ -137,25 +144,25 @@ class TicTacToe:
 
 
 	def _validate_selection(self, selection):
-		x, y = selection
+		i, j = selection
 
-		return self.board[x][y] == None
+		return self.board[i][j] == None
 
 
 
 	def _finalize_selection(self, selection):
-		x, y = selection
+		i, j = selection
 
-		self.board[x][y] = self.turn
+		self.board[i][j] = self.turn
 
-		if self.turn == 'x':
+		if self.turn == 'X':
 			image = self.x
 			rect = self.xRect
 		else:
 			image = self.o
 			rect = self.oRect
 
-		self._draw_box(image, rect, x, y)
+		self._draw_box(image, rect, i, j)
 
 
 
@@ -171,15 +178,82 @@ class TicTacToe:
 
 
 	def _randomize_selection(self):
-		x = random.randint(0,2)
-		y = random.randint(0,2)
-		return x, y
+		i = random.randint(0,2)
+		j = random.randint(0,2)
+		return i, j
 
 
 
 	def _check_for_game_over(self):
+		if not self._check_for_winner():
+			for i in range(3):
+				for j in range(3):
+					if self.board[i][j] == None:
+						return False
+		return True
+
+
+
+	def _check_for_winner(self):
 		for i in range(3):
 			for j in range(3):
-				if self.board[i][j] == None:
-					return False
-		return True
+				if self.board[i][j] == self.turn:
+					if self._check_spot_for_win(i, j):
+						return True
+		return False
+
+
+
+	def _check_spot_for_win(self, i, j):
+		return self._check_for_horizontal_win(i) or self._check_for_vertical_win(j) or self._check_for_diagonal_win(i, j)
+
+
+
+	def _check_for_horizontal_win(self, i):
+		win = True
+		for j in range(3):
+			if self.board[i][j] != self.turn:
+				win = False
+				break
+		if win:
+			return True
+
+
+
+	def _check_for_vertical_win(self, j):
+		win = True
+		for i in range(3):
+			if self.board[i][j] != self.turn:
+				win = False
+				break
+		if win:
+			return True
+
+
+
+	def _check_for_diagonal_win(self, i, j):
+		diagonals = [(0, 0), (1, 1), (2, 2), (0, 2), (2, 0)]
+
+		if (i, j) in diagonals:
+			win = True
+			for i in range(3):
+				if self.board[i][i] != self.turn:
+					win = False
+					break
+			if win:
+				return True
+
+			win = True
+			for i in range(3):
+				for j in range(2, -1, -1):
+					if self.board[i][i] != self.turn:
+						win = False
+						break
+			if win:
+				return True
+
+		return False
+
+
+	def _display_winner(self):
+		pass
