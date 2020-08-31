@@ -6,12 +6,16 @@ BLACK = 0, 0, 0
 WHITE = 255, 255, 255
 
 class TicTacToe:
+
 	def __init__(self):
 		pygame.init()
+		random.seed()
 		self._load_in_resources()
 		self._initialize_window()
 		self._initialize_board()
 		self._main_loop()
+
+
 
 	def _load_in_resources(self):
 		self.empty = pygame.image.load("resources/images/empty.png")
@@ -21,15 +25,21 @@ class TicTacToe:
 		self.o = pygame.image.load("resources/images/o.png")
 		self.oRect = self.o.get_rect()
 
+
+
 	def _initialize_window(self):
 		self.screen = pygame.display.set_mode(WINDOW_SIZE)
 		self._reset_board()
+
+
 
 
 	def _initialize_board(self):
 		self.board = []
 		for i in range(3):
 			self.board.append([None] * 3)
+
+
 
 	def _reset_board(self):
 		# Fill screen with black
@@ -41,11 +51,20 @@ class TicTacToe:
 				self._draw_box(self.empty, self.emptyRect, i, j)
 
 
+
+	def _reset_game(self):
+		self._reset_board()
+		self._initialize_board()
+
+
 	def _main_loop(self):
 		while True:
 			self._game_loop()
 			if not self._play_again():
 				break
+			self._reset_game()
+
+
 
 	def _play_again(self):
 		while True:
@@ -56,6 +75,8 @@ class TicTacToe:
 				return False
 			print("Invalid input. Please try again.")
 
+
+
 	def _draw_box(self, image, rect, xloc, yloc):
 		xloc *= 205
 		yloc *= 205
@@ -63,6 +84,8 @@ class TicTacToe:
 		self.screen.blit(image, rect)
 		rect.move_ip(-xloc, -yloc)
 		pygame.display.update()
+
+
 
 	def _game_loop(self):
 		gameOver = False
@@ -78,7 +101,9 @@ class TicTacToe:
 			else:
 				self._computer_turn()
 				self.turn = 'x'
-			self._check_for_winner()
+			gameOver = self._check_for_game_over()
+
+
 
 	def _player_turn(self):
 		validSelection = False
@@ -88,6 +113,8 @@ class TicTacToe:
 			validSelection = self._validate_selection(selection)
 			if validSelection:
 				self._finalize_selection(selection)		
+
+
 
 	def _player_selection(self):
 		while True:
@@ -107,10 +134,14 @@ class TicTacToe:
 							if x < (200 + (205 * i)) and y < (200 + (205 * j)):
 								return i, j
 
+
+
 	def _validate_selection(self, selection):
 		x, y = selection
 
 		return self.board[x][y] == None
+
+
 
 	def _finalize_selection(self, selection):
 		x, y = selection
@@ -126,6 +157,8 @@ class TicTacToe:
 
 		self._draw_box(image, rect, x, y)
 
+
+
 	def _computer_turn(self):
 		validSelection = False
 
@@ -135,10 +168,18 @@ class TicTacToe:
 			if validSelection:
 				self._finalize_selection(selection)
 
+
+
 	def _randomize_selection(self):
 		x = random.randint(0,2)
 		y = random.randint(0,2)
 		return x, y
 
-	def _check_for_winner(self):
-		pass
+
+
+	def _check_for_game_over(self):
+		for i in range(3):
+			for j in range(3):
+				if self.board[i][j] == None:
+					return False
+		return True
