@@ -244,14 +244,13 @@ class TicTacToe:
 				return True
 
 			win = True
+			j = 2
 			for i in range(3):
-				for j in range(2, -1, -1):
-					if self.board[i][i] != self.turn:
-						win = False
-						break
-			if win:
-				return True
-
+				if self.board[i][j] != self.turn:
+					win = False
+					break
+				j -= 1
+			return win
 		return False
 
 
