@@ -1,7 +1,8 @@
 import pygame, random, sys
 from pygame.locals import *
 
-WINDOW_SIZE = (610, 610)
+WINDOW_SIZE = WINDOW_X, WINDOW_Y = 610, 710
+TEXTBOX = TEXTBOX_X, TEXTBOX_Y = 0, 610
 BLACK = 0, 0, 0
 WHITE = 255, 255, 255
 
@@ -9,6 +10,7 @@ class TicTacToe:
 
 	def __init__(self):
 		pygame.init()
+		self.font = pygame.font.SysFont(None, 50)
 		random.seed()
 		self._load_in_resources()
 		self._initialize_window()
@@ -36,6 +38,7 @@ class TicTacToe:
 
 	def _initialize_board(self):
 		self.board = []
+		self.tie = False
 		for i in range(3):
 			self.board.append([None] * 3)
 
@@ -190,6 +193,7 @@ class TicTacToe:
 				for j in range(3):
 					if self.board[i][j] == None:
 						return False
+			self.tie = True
 		return True
 
 
@@ -255,4 +259,27 @@ class TicTacToe:
 
 
 	def _display_winner(self):
-		pass
+		message = self._generate_message()
+		self._display_message(message)
+
+
+
+	def _generate_message(self):
+		if self.tie:
+			message = "It's a Tie!"
+		else:
+			message = self.turn + " WINS!"
+
+		return message
+
+
+
+	def _display_message(self, message):
+		text = self.font.render(message, True, WHITE)
+		x, y = self.font.size(message)
+
+		textX = (WINDOW_X - x) // 2
+		textY = TEXTBOX_Y + ((WINDOW_Y -TEXTBOX_Y - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+		pygame.display.update()
