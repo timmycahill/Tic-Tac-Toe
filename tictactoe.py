@@ -2,7 +2,8 @@ import pygame, random, sys
 from pygame.locals import *
 
 WINDOW_SIZE = WINDOW_X, WINDOW_Y = 610, 710
-TEXTBOX = TEXTBOX_X, TEXTBOX_Y = 0, 610
+TEXTBOX_LOCATION = TEXTBOX_X, TEXTBOX_Y = 0, 610
+TEXTBOX_DIMENSIONS = TEXTBOX_WIDTH, TEXTBOX_HEIGHT = 610, 100
 BLACK = 0, 0, 0
 WHITE = 255, 255, 255
 
@@ -31,6 +32,7 @@ class TicTacToe:
 
 	def _initialize_window(self):
 		self.screen = pygame.display.set_mode(WINDOW_SIZE)
+		self.textbox = self.screen.subsurface(Rect(TEXTBOX_LOCATION, TEXTBOX_DIMENSIONS))
 		self._reset_board()
 
 
@@ -63,6 +65,7 @@ class TicTacToe:
 	def _main_loop(self):
 		while True:
 			self._game_loop()
+			self._wait_for_click()
 			if not self._play_again():
 				break
 			self._reset_game()
@@ -70,13 +73,86 @@ class TicTacToe:
 
 
 	def _play_again(self):
+		self._clear_text_box()
+		self._draw_play_again_text()
+		return self._read_in_play_again()
+
+
+
+	def _read_in_play_again(self):
 		while True:
-			playAgain = input("Would you like to play again? (Y/N): ")
-			if playAgain.upper() == "Y":
+			x, y = self._read_in_mouse_click_loc()
+
+			if x < TEXTBOX_WIDTH // 2 and y > TEXTBOX_Y + (TEXTBOX_HEIGHT // 2):
 				return True
-			elif playAgain.upper() == "N":
+			elif x > TEXTBOX_WIDTH // 2 and y > TEXTBOX_Y + (TEXTBOX_HEIGHT // 2):
 				return False
-			print("Invalid input. Please try again.")
+
+
+
+	def _read_in_mouse_click_loc(self):
+		while True:
+			for event in pygame.event.get():
+				# If player exits...
+				if event.type == QUIT:
+					sys.exit()
+				# If mouse is clicked...
+				elif event.type == MOUSEBUTTONDOWN:
+					return pygame.mouse.get_pos()
+
+
+
+	def _clear_text_box(self):
+		self.textbox.fill(BLACK)
+		pygame.display.update()
+
+
+
+	def _display_play_again_text(self):
+		self._draw_play_again_text()
+		self._draw_yes_text()
+		self._draw_no_text()
+		
+
+
+	def _draw_play_again_text(self):
+		text = self.font.render("Play again?", True, WHITE)
+		x, y = self.font.size("Play again?")
+
+		textX = (WINDOW_X - x) // 2
+		textY = TEXTBOX_Y + (((TEXTBOX_HEIGHT // 2) - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+		pygame.display.update()
+
+
+
+	def _draw_yes_text(self):
+		text = self.font.render("Yes", True, WHITE)
+		x, y = self.font.size("Yes")
+
+		textX = ((WINDOW_X // 2) - x) // 2
+		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+		pygame.display.update()
+
+
+
+	def _draw_no_text(self):
+		text = self.font.render("No", True, WHITE)
+		x, y = self.font.size("No")
+
+		textX = (WINDOW_X // 2) + (((WINDOW_X // 2) - x) // 2)
+		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+		pygame.display.update()
+
+
+
+	def _wait_for_click(self):
+		self._read_in_mouse_click_loc()
 
 
 
@@ -114,7 +190,6 @@ class TicTacToe:
 
 
 
-
 	def _player_turn(self):
 		validSelection = False
 
@@ -128,21 +203,14 @@ class TicTacToe:
 
 	def _player_selection(self):
 		while True:
-			for event in pygame.event.get():
-				# If player exits...
-				if event.type == QUIT:
-					sys.exit()
-				# If mouse is clicked...
-				elif event.type == MOUSEBUTTONDOWN:
-					# Read in mouse position
-					x, y = pygame.mouse.get_pos()
-
-					# Determine which box was clicked
-					for i in range(3):
-						finished = False
-						for j in range(3):
-							if x < (200 + (205 * i)) and y < (200 + (205 * j)):
-								return i, j
+			x, y = self._read_in_mouse_click_loc()
+			
+			# Determine which box was clicked
+			for i in range(3):
+				finished = False
+				for j in range(3):
+					if x < (200 + (205 * i)) and y < (200 + (205 * j)):
+						return i, j
 
 
 
@@ -259,12 +327,12 @@ class TicTacToe:
 
 
 	def _display_winner(self):
-		message = self._generate_message()
-		self._display_message(message)
+		message = self._generate_winner_message()
+		self._display_winner_message(message)
 
 
 
-	def _generate_message(self):
+	def _generate_winner_message(self):
 		if self.tie:
 			message = "It's a Tie!"
 		else:
@@ -274,12 +342,12 @@ class TicTacToe:
 
 
 
-	def _display_message(self, message):
+	def _display_winner_message(self, message):
 		text = self.font.render(message, True, WHITE)
 		x, y = self.font.size(message)
 
 		textX = (WINDOW_X - x) // 2
-		textY = TEXTBOX_Y + ((WINDOW_Y -TEXTBOX_Y - y) // 2)
+		textY = TEXTBOX_Y + ((TEXTBOX_HEIGHT - y) // 2)
 
 		self.screen.blit(text, (textX, textY))
 		pygame.display.update()
