@@ -13,6 +13,8 @@ class TicTacToe:
 		pygame.init()
 		self.font = pygame.font.SysFont(None, 50)
 		random.seed()
+		self.playerWins = 0
+		self.computerWins = 0
 		self._load_in_resources()
 		self._initialize_window()
 		self._initialize_board()
@@ -53,6 +55,15 @@ class TicTacToe:
 
 
 
+	def _increment_win_count(self):
+		if not self.tie:
+			if self.turn == 'X':
+				self.playerWins += 1
+			else:
+				self.computerWins += 1
+
+
+
 	def _reset_board(self):
 		# Fill screen with black
 		self.screen.fill(BLACK)
@@ -67,6 +78,7 @@ class TicTacToe:
 	def _reset_game(self):
 		self._reset_board()
 		self._initialize_board()
+
 
 
 	def _main_loop(self):
@@ -174,6 +186,9 @@ class TicTacToe:
 
 
 	def _game_loop(self):
+		# Display win count to screen
+		self._display_wins()
+
 		gameOver = False
 		if random.randint(0, 1) == 0:
 			self.turn = 'X'
@@ -189,11 +204,67 @@ class TicTacToe:
 			gameOver = self._check_for_game_over()
 			if gameOver:
 				self._display_winner()
+				self._increment_win_count()
 			else:
 				if self.turn == 'X':
 					self.turn = 'O'
 				else:
 					self.turn = 'X'
+
+
+
+	def _display_wins(self):
+		self._clear_text_box()
+		self._draw_player_wins()
+		self._draw_computer_wins()
+
+
+	def _draw_player_wins(self):
+		# Draw player text
+		text = self.font.render("Player: ", True, WHITE)
+		x, y = self.font.size("Player: ")
+
+		textX = (WINDOW_X // 2) - x
+		textY = TEXTBOX_Y + (((TEXTBOX_HEIGHT // 2) - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+
+		# Draw win count text
+		text = self.font.render(str(self.playerWins), True, WHITE)
+		x, y = self.font.size(str(self.playerWins))
+
+		textX = WINDOW_X // 2
+		textY = TEXTBOX_Y + (((TEXTBOX_HEIGHT // 2) - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+
+		# Update screen
+		pygame.display.update()
+
+
+	def _draw_computer_wins(self):
+		# Draw computer text
+		text = self.font.render("Computer: ", True, WHITE)
+		x, y = self.font.size("Computer: ")
+
+		textX = (WINDOW_X // 2) - x
+		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+
+		# Draw win count text
+		text = self.font.render(str(self.computerWins), True, WHITE)
+		x, y = self.font.size(str(self.computerWins))
+
+		textX = WINDOW_X // 2
+		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+
+		# Update screen
+		pygame.display.update()
+
+
 
 
 
@@ -338,6 +409,7 @@ class TicTacToe:
 
 
 	def _display_winner(self):
+		self._clear_text_box()
 		message = self._generate_winner_message()
 		self._display_winner_message(message)
 
