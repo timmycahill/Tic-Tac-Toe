@@ -245,6 +245,10 @@ class TicTacToe:
 
 
 	def _computer_turn(self):
+		# Add delay to make move more natural
+		pygame.time.delay(333)
+
+		# Make move
 		validSelection = False
 
 		while not validSelection:
