@@ -16,7 +16,14 @@ class TicTacToe:
 		self._load_in_resources()
 		self._initialize_window()
 		self._initialize_board()
+		self._initialize_music()
 		self._main_loop()
+
+
+
+	def _initialize_music(self):
+		pygame.mixer.music.load("resources/music/music.mp3")
+		pygame.mixer.music.play(loops=-1)
 
 
 
