@@ -74,7 +74,7 @@ class TicTacToe:
 
 	def _play_again(self):
 		self._clear_text_box()
-		self._draw_play_again_text()
+		self._display_play_again_text()
 		return self._read_in_play_again()
 
 
@@ -112,7 +112,7 @@ class TicTacToe:
 		self._draw_play_again_text()
 		self._draw_yes_text()
 		self._draw_no_text()
-		
+
 
 
 	def _draw_play_again_text(self):
