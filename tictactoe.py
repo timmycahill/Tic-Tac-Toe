@@ -1,20 +1,19 @@
 import pygame, random, sys
 from pygame.locals import *
 
-WINDOW_SIZE = WINDOW_X, WINDOW_Y = 610, 710
+WINDOW_SIZE = WINDOW_WIDTH, WINDOW_HEIGHT = 610, 710
 TEXTBOX_LOCATION = TEXTBOX_X, TEXTBOX_Y = 0, 610
 TEXTBOX_DIMENSIONS = TEXTBOX_WIDTH, TEXTBOX_HEIGHT = 610, 100
 BLACK = 0, 0, 0
 WHITE = 255, 255, 255
 
-class TicTacToe:
+class Game:
 
 	def __init__(self):
 		pygame.init()
 		self.font = pygame.font.SysFont(None, 50)
 		random.seed()
-		self.playerWins = 0
-		self.computerWins = 0
+		
 		self._load_in_resources()
 		self._initialize_window()
 		self._initialize_board()
@@ -55,6 +54,12 @@ class TicTacToe:
 
 
 
+	def _reset_score(self):
+		self.playerWins = 0
+		self.computerWins = 0
+
+
+
 	def _increment_win_count(self):
 		if not self.tie:
 			if self.turn == 'X':
@@ -73,21 +78,98 @@ class TicTacToe:
 			for j in range(3):
 				self._draw_box(self.empty, self.emptyRect, i, j)
 
+		self._initialize_board()
+
 
 
 	def _reset_game(self):
 		self._reset_board()
-		self._initialize_board()
+		self._reset_score()
 
 
 
 	def _main_loop(self):
 		while True:
-			self._game_loop()
-			self._wait_for_click()
-			if not self._play_again():
+			self._menu_screen()
+			if self._read_in_play_again():
+				self._reset_game()
+				while True:
+					self._reset_board()
+					self._game_loop()
+					self._wait_for_click()
+					if not self._play_again():
+						break
+			else:
 				break
-			self._reset_game()
+
+
+
+	def _menu_screen(self):
+		# Fill screen with black
+		self.screen.fill(BLACK)
+		self._display_menu_text()
+		self._display_menu_image()
+
+
+
+	def _display_menu_image(self):
+		# Load in menu image
+		menuImage = pygame.image.load("resources/images/menuImage.png")
+		menuImageRect = menuImage.get_rect()
+
+		# Move menu image to desired location
+		x = (WINDOW_WIDTH - menuImageRect.width) // 2
+		y = (WINDOW_HEIGHT - menuImageRect.height) // 2
+		menuImageRect.move_ip(x, y)
+
+		# Blit and print menu image to screen
+		self.screen.blit(menuImage, menuImageRect)
+		pygame.display.update()
+
+
+
+	def _display_menu_text(self):
+		self._display_menu_title()
+		self._draw_play_text()
+		self._draw_quit_text()
+
+
+
+	def _display_menu_title(self):
+		# Display game title
+		font = pygame.font.SysFont(None, 100)
+		text = font.render("TicTacToe", True, WHITE)
+		textWidth, textHeight = font.size("TicTacToe")
+
+		textX = (WINDOW_WIDTH - textWidth) // 2
+		textY = (WINDOW_HEIGHT - textHeight) // 7
+
+		self.screen.blit(text, (textX, textY))
+		pygame.display.update()
+
+
+
+	def _draw_play_text(self):
+		text = self.font.render("Play", True, WHITE)
+		x, y = self.font.size("Play")
+
+		textX = ((WINDOW_WIDTH // 2) - x) // 2
+		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+		pygame.display.update()
+
+
+
+	def _draw_quit_text(self):
+		text = self.font.render("Quit", True, WHITE)
+		x, y = self.font.size("Quit")
+
+		textX = (WINDOW_WIDTH // 2) + (((WINDOW_WIDTH // 2) - x) // 2)
+		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
+
+		self.screen.blit(text, (textX, textY))
+		pygame.display.update()
 
 
 
@@ -138,7 +220,7 @@ class TicTacToe:
 		text = self.font.render("Play again?", True, WHITE)
 		x, y = self.font.size("Play again?")
 
-		textX = (WINDOW_X - x) // 2
+		textX = (WINDOW_WIDTH - x) // 2
 		textY = TEXTBOX_Y + (((TEXTBOX_HEIGHT // 2) - y) // 2)
 
 		self.screen.blit(text, (textX, textY))
@@ -150,7 +232,7 @@ class TicTacToe:
 		text = self.font.render("Yes", True, WHITE)
 		x, y = self.font.size("Yes")
 
-		textX = ((WINDOW_X // 2) - x) // 2
+		textX = ((WINDOW_WIDTH // 2) - x) // 2
 		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
 
 		self.screen.blit(text, (textX, textY))
@@ -162,7 +244,7 @@ class TicTacToe:
 		text = self.font.render("No", True, WHITE)
 		x, y = self.font.size("No")
 
-		textX = (WINDOW_X // 2) + (((WINDOW_X // 2) - x) // 2)
+		textX = (WINDOW_WIDTH // 2) + (((WINDOW_WIDTH // 2) - x) // 2)
 		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
 
 		self.screen.blit(text, (textX, textY))
@@ -224,7 +306,7 @@ class TicTacToe:
 		text = self.font.render("Player: ", True, WHITE)
 		x, y = self.font.size("Player: ")
 
-		textX = (WINDOW_X // 2) - x
+		textX = (WINDOW_WIDTH // 2) - x
 		textY = TEXTBOX_Y + (((TEXTBOX_HEIGHT // 2) - y) // 2)
 
 		self.screen.blit(text, (textX, textY))
@@ -233,7 +315,7 @@ class TicTacToe:
 		text = self.font.render(str(self.playerWins), True, WHITE)
 		x, y = self.font.size(str(self.playerWins))
 
-		textX = WINDOW_X // 2
+		textX = WINDOW_WIDTH // 2
 		textY = TEXTBOX_Y + (((TEXTBOX_HEIGHT // 2) - y) // 2)
 
 		self.screen.blit(text, (textX, textY))
@@ -247,7 +329,7 @@ class TicTacToe:
 		text = self.font.render("Computer: ", True, WHITE)
 		x, y = self.font.size("Computer: ")
 
-		textX = (WINDOW_X // 2) - x
+		textX = (WINDOW_WIDTH // 2) - x
 		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
 
 		self.screen.blit(text, (textX, textY))
@@ -256,7 +338,7 @@ class TicTacToe:
 		text = self.font.render(str(self.computerWins), True, WHITE)
 		x, y = self.font.size(str(self.computerWins))
 
-		textX = WINDOW_X // 2
+		textX = WINDOW_WIDTH // 2
 		textY = TEXTBOX_Y + (TEXTBOX_HEIGHT // 2) + (((TEXTBOX_HEIGHT // 2) - y) // 2)
 
 		self.screen.blit(text, (textX, textY))
@@ -429,7 +511,7 @@ class TicTacToe:
 		text = self.font.render(message, True, WHITE)
 		x, y = self.font.size(message)
 
-		textX = (WINDOW_X - x) // 2
+		textX = (WINDOW_WIDTH - x) // 2
 		textY = TEXTBOX_Y + ((TEXTBOX_HEIGHT - y) // 2)
 
 		self.screen.blit(text, (textX, textY))
