@@ -1,7 +1,8 @@
-import tictactoe
+from view import View
 
 def main():
-	game = tictactoe.Game()
+	game = View()
+	game.run()
 
 if __name__ == "__main__":
 	main()

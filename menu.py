@@ -1,14 +1,12 @@
 class Menu:
 	def __init__(self):
 		self.title = "TicTacToe"
-		self.image = None
-		self.playButton = None
-		self.quitButton = None
+		self.image_path = "resources/images/menuImage.png"
 
 		
-	def play(self):
-		pass
+	def get_title(self):
+		return self.title
 
 
-	def quit(self):
-		pass
+	def get_image_path(self):
+		return self.image_path
