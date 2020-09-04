@@ -1,7 +1,8 @@
-import tictactoe
+import game
 
 def main():
-	game = tictactoe.Game()
+	program = game.Game()
+	program.run()
 
 if __name__ == "__main__":
 	main()
