@@ -23,7 +23,7 @@ class Game:
 
 
 	def _initialize_music(self):
-		pygame.mixer.music.load("resources/music/music.mp3")
+		pygame.mixer.music.load("resources/music/bg_music.wav")
 		pygame.mixer.music.play(loops=-1)
 
 
