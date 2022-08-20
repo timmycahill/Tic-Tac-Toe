@@ -8,12 +8,13 @@ BLACK = 0, 0, 0
 WHITE = 255, 255, 255
 
 class Game:
+	# Lenny was here
 
 	def __init__(self):
 		pygame.init()
 		self.font = pygame.font.SysFont(None, 50)
 		random.seed()
-		
+
 		self._load_in_resources()
 		self._initialize_window()
 		self._initialize_board()
@@ -357,14 +358,14 @@ class Game:
 			selection = self._player_selection()
 			validSelection = self._validate_selection(selection)
 			if validSelection:
-				self._finalize_selection(selection)		
+				self._finalize_selection(selection)
 
 
 
 	def _player_selection(self):
 		while True:
 			x, y = self._read_in_mouse_click_loc()
-			
+
 			# Determine which box was clicked
 			for i in range(3):
 				finished = False
